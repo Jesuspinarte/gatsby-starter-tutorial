@@ -1,13 +1,16 @@
 import React from 'react';
 import Layout from '../components/layout';
 import { graphql } from 'gatsby';
+import Img from 'gatsby-image';
 
 const BlogPost = ({ data }) => {
   const post = data.allWpPost.edges[0].node;
-  console.log(post);
+  const imageResolution = post.featuredImage.node.localFile.childImageSharp.fluid;
+  console.log(imageResolution);
 
   return (
     <Layout>
+      <Img fluid={imageResolution}/>
       <div>
         <h1>{post.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
@@ -25,6 +28,17 @@ export const query = graphql`
         node {
           title
           content
+          featuredImage {
+            node {
+              localFile {
+                childImageSharp {
+                  fluid(maxWidth: 1080, toFormatBase64: NO_CHANGE) {
+                    ...GatsbyImageSharpFluid
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
